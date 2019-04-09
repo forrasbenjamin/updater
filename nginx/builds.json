@@ -1,1 +1,11 @@
-{}
+[
+   {
+      "datetime":1544008884,
+      "filename":"lineage-16.0-20180901-UNOFFICIAL-mido.zip",
+      "id":"6339825c84238961083939da6f166d46390af1f4132c7adebe01ef68c72a4fb1",
+      "romtype":"unofficial",
+      "size":559002940,
+      "url":"https://mirrorbits.lineageos.org/full/mido/20181205/lineage-15.1-20181205-nightly-mido-signed.zip",
+      "version":"16.0"
+   }
+]
