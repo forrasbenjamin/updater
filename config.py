@@ -9,6 +9,6 @@ class Config(object):
     WIKI_INSTALL_URL = os.environ.get('WIKI_INSTALL_URL', 'https://wiki.lineageos.org/devices/{device}/install')
     WIKI_INFO_URL = os.environ.get('WIKI_INFO_URL', 'https://wiki.lineageos.org/devices/{device}')
 
-    UPSTREAM_URL = os.environ.get('UPSTREAM_URL', '')
+    UPSTREAM_URL = os.environ.get('UPSTREAM_URL', 'https://raw.githubusercontent.com/forrasbenjamin/updater/master/nginx/builds.json')
     DOWNLOAD_BASE_URL = os.environ.get('DOWNLOAD_BASE_URL', 'https://mirrorbits.lineageos.org')
     EXTRAS_BLOB = os.environ.get('EXTRAS_BLOB', 'extras.json')

@@ -13,7 +13,7 @@ from changelog import get_changes
 from config import Config
 from custom_exceptions import DeviceNotFoundException, UpstreamApiException
 from flask import Flask, jsonify, request, render_template, Response
-from flask_caching import Cache
+#from flask_caching import Cache
 from prometheus_client import multiprocess, generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST, Counter, Histogram
 
 
@@ -22,7 +22,7 @@ app = Flask(__name__)
 app.config.from_object("config.Config")
 app.json_encoder = GerritJSONEncoder
 
-cache = Cache(app)
+#cache = Cache(app)
 gerrit = GerritServer(app.config['GERRIT_URL'])
 
 extras_data = json.loads(open(app.config['EXTRAS_BLOB'], "r").read())
@@ -84,7 +84,7 @@ def handle_upstream_exception(error):
 # Mirrorbits Interface
 ##########################
 
-@cache.memoize()
+#@cache.memoize()
 def get_builds():
     try:
         req = requests.get(app.config['UPSTREAM_URL'])
@@ -104,7 +104,7 @@ def get_device(device):
         raise DeviceNotFoundException("This device has no available builds. Please select another device.")
     return builds[device]
 
-@cache.memoize()
+#@cache.memoize()
 def get_oem_device_mapping():
     oem_to_device = {}
     device_to_oem = {}
@@ -123,7 +123,7 @@ def get_oem_device_mapping():
             device_to_oem[device['model']] = device['oem']
     return oem_to_device, device_to_oem
 
-@cache.memoize()
+#@cache.memoize()
 def get_build_types(device, romtype, after, version):
     roms = get_device(device)
     roms = [x for x in roms if x['type'] == romtype]
@@ -149,7 +149,7 @@ def get_build_types(device, romtype, after, version):
         })
     return jsonify({'response': data})
 
-@cache.memoize()
+#@cache.memoize()
 def get_device_version(device):
     if device == 'all':
         return None
@@ -169,7 +169,7 @@ def index(device, romtype, incrementalversion):
     return get_build_types(device, romtype, after, version)
 
 @app.route('/api/v1/types/<string:device>/')
-@cache.cached()
+#@cache.cached()
 def get_types(device):
     data = get_device(device)
     types = set(['nightly'])
@@ -180,20 +180,20 @@ def get_types(device):
 @app.route('/api/v1/changes/<device>/')
 @app.route('/api/v1/changes/<device>/<int:before>/')
 @app.route('/api/v1/changes/<device>/-1/')
-@cache.cached()
+#@cache.cached()
 def changes(device='all', before=-1):
     return jsonify(get_changes(gerrit, device, before, get_device_version(device), app.config.get('STATUS_URL', '#')))
 
 @app.route('/<device>/changes/<int:before>/')
 @app.route('/<device>/changes/')
 @app.route('/')
-@cache.cached()
+#@cache.cached()
 def show_changelog(device='all', before=-1):
     oem_to_devices, device_to_oem = get_oem_device_mapping()
     return render_template('changes.html', oem_to_devices=oem_to_devices, device_to_oem=device_to_oem, device=device, before=before, changelog=True)
 
 @app.route('/api/v1/devices')
-@cache.cached()
+#@cache.cached()
 def api_v1_devices():
     data = get_builds()
     versions = {}
@@ -214,7 +214,7 @@ def inject_year():
     return dict(year=strftime("%Y"))
 
 @app.route("/<string:device>")
-@cache.cached()
+#@cache.cached()
 def web_device(device):
     oem_to_devices, device_to_oem = get_oem_device_mapping()
     roms = reversed(get_device(device))
@@ -227,7 +227,7 @@ def favicon():
     return ''
 
 @app.route("/extras")
-@cache.cached()
+#@cache.cached()
 def web_extras():
     oem_to_devices, device_to_oem = get_oem_device_mapping()
 
